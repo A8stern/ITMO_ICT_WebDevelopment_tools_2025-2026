@@ -1,0 +1,5 @@
+https://example.com
+https://www.python.org
+https://docs.python.org/3/
+https://fastapi.tiangolo.com
+https://www.sqlite.org/index.html
