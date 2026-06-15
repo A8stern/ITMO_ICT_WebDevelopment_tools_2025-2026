@@ -1,0 +1,21 @@
+site_name: Документация лабораторных работ
+site_description: Документация по лабораторным работам по веб-разработке
+
+nav:
+  - Главная: index.md
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: green
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Переключить на тёмную тему
+    - scheme: slate
+      primary: deep purple
+      accent: lime
+      toggle:
+        icon: material/brightness-4
+        name: Переключить на светлую тему
