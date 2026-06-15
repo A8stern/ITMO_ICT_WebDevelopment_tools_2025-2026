@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Finance Caldera</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <nav class="nav-shell">
+      <a class="brand" href="/app" aria-label="Finance Caldera">
+        <span class="brand-mark"></span>
+        <span>FINANCE CALDERA</span>
+      </a>
+      <div class="nav-links">
+        <a href="#overview">Обзор</a>
+        <a href="#operations">Операции</a>
+        <a href="#planning">Планы</a>
+      </div>
+      <button class="nav-button" id="logoutButton" type="button">Выйти</button>
+    </nav>
+
+    <main class="page-shell">
+      <section class="hero-section" id="overview">
+        <div class="hero-copy">
+          <p class="eyebrow">Лабораторная работа 1</p>
+          <h1>ЛИЧНЫЕ ФИНАНСЫ</h1>
+          <p class="hero-text">Единый экран для операций, бюджетов, целей и уведомлений. Интерфейс работает поверх FastAPI API лабораторной и использует JWT-авторизацию.</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="refreshButton" type="button">Обновить данные</button>
+            <a class="ghost-button" href="/docs">Swagger</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="hero-card">
+            <span>API</span>
+            <strong>40</strong>
+            <small>эндпоинтов в OpenAPI</small>
+          </div>
+        </div>
+      </section>
+
+      <section class="auth-grid" id="authSection">
+        <article class="panel auth-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Доступ</p>
+            <h2>Вход</h2>
+          </div>
+          <form id="loginForm" class="form-grid">
+            <label>
+              <span>Логин</span>
+              <input name="username" value="demo" autocomplete="username" required>
+            </label>
+            <label>
+              <span>Пароль</span>
+              <input name="password" value="demo12345" type="password" autocomplete="current-password" required>
+            </label>
+            <button class="primary-button" type="submit">Войти</button>
+          </form>
+        </article>
+
+        <article class="panel auth-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Новый профиль</p>
+            <h2>Регистрация</h2>
+          </div>
+          <form id="registerForm" class="form-grid">
+            <label>
+              <span>Логин</span>
+              <input name="username" value="demo" autocomplete="username" required>
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" value="demo@example.com" type="email" autocomplete="email" required>
+            </label>
+            <label>
+              <span>Пароль</span>
+              <input name="password" value="demo12345" type="password" autocomplete="new-password" required>
+            </label>
+            <button class="ghost-button" type="submit">Создать</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="status-line" id="statusLine">Готов к подключению</section>
+
+      <section class="stats-grid">
+        <article class="stat-card">
+          <span>Доходы</span>
+          <strong id="incomeValue">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Расходы</span>
+          <strong id="expenseValue">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Баланс</span>
+          <strong id="balanceValue">0</strong>
+        </article>
+        <article class="stat-card">
+          <span>Уведомления</span>
+          <strong id="notificationsValue">0</strong>
+        </article>
+      </section>
+
+      <section class="content-grid" id="operations">
+        <article class="panel wide-panel">
+          <div class="section-heading">
+            <p class="eyebrow">Журнал</p>
+            <h2>Операции</h2>
+          </div>
+          <form id="transactionForm" class="form-grid split-form">
+            <label>
+              <span>Название</span>
+              <input name="title" value="Groceries" required>
+            </label>
+            <label>
+              <span>Сумма</span>
+              <input name="amount" value="4500" type="number" min="1" step="1" required>
+            </label>
+            <label>
+              <span>Тип</span>
+              <select name="transaction_type">
+                <option value="expense">Расход</option>
+                <option value="income">Доход</option>
+              </select>
+            </label>
+            <label>
+              <span>Дата</span>
+              <input name="operation_date" value="2026-06-14" type="date" required>
+            </label>
+            <label>
+              <span>Категория</span>
+              <select name="category_id" id="transactionCategorySelect"></select>
+            </label>
+            <label>
+              <span>Описание</span>
+              <input name="description" value="Weekly groceries">
+            </label>
+            <button class="primary-button" type="submit">Добавить операцию</button>
+          </form>
+          <div class="table-shell">
+            <table>
+              <thead>
+                <tr>
+                  <th>Название</th>
+                  <th>Тип</th>
+                  <th>Сумма</th>
+                  <th>Категория</th>
+                  <th>Теги</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsTable"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Справочники</p>
+            <h2>Категории</h2>
+          </div>
+          <form id="categoryForm" class="form-grid">
+            <label>
+              <span>Название</span>
+              <input name="title" value="Food" required>
+            </label>
+            <label>
+              <span>Описание</span>
+              <input name="description" value="Groceries and cafes" required>
+            </label>
+            <label>
+              <span>Лимит</span>
+              <input name="monthly_limit" value="30000" type="number" min="0" step="1" required>
+            </label>
+            <button class="primary-button" type="submit">Создать категорию</button>
+          </form>
+          <div class="chips" id="categoriesList"></div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Метки</p>
+            <h2>Теги</h2>
+          </div>
+          <form id="tagForm" class="form-grid">
+            <label>
+              <span>Название</span>
+              <input name="name" value="card" required>
+            </label>
+            <label>
+              <span>Описание</span>
+              <input name="description" value="Paid by bank card" required>
+            </label>
+            <button class="primary-button" type="submit">Создать тег</button>
+          </form>
+          <form id="linkForm" class="form-grid">
+            <label>
+              <span>Операция</span>
+              <select name="transaction_id" id="linkTransactionSelect"></select>
+            </label>
+            <label>
+              <span>Тег</span>
+              <select name="tag_id" id="linkTagSelect"></select>
+            </label>
+            <label>
+              <span>Важность</span>
+              <input name="importance_level" value="5" type="number" min="1" max="10">
+            </label>
+            <button class="ghost-button" type="submit">Связать</button>
+          </form>
+          <div class="chips" id="tagsList"></div>
+        </article>
+      </section>
+
+      <section class="content-grid" id="planning">
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Лимиты</p>
+            <h2>Бюджеты</h2>
+          </div>
+          <form id="budgetForm" class="form-grid">
+            <label>
+              <span>Название</span>
+              <input name="title" value="Food budget for June" required>
+            </label>
+            <label>
+              <span>Сумма</span>
+              <input name="amount" value="30000" type="number" min="1" step="1" required>
+            </label>
+            <label>
+              <span>Начало</span>
+              <input name="period_start" value="2026-06-01" type="date" required>
+            </label>
+            <label>
+              <span>Конец</span>
+              <input name="period_end" value="2026-06-30" type="date" required>
+            </label>
+            <label>
+              <span>Категория</span>
+              <select name="category_id" id="budgetCategorySelect"></select>
+            </label>
+            <button class="primary-button" type="submit">Создать бюджет</button>
+          </form>
+          <div class="list-stack" id="budgetsList"></div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Будущее</p>
+            <h2>Цели</h2>
+          </div>
+          <form id="goalForm" class="form-grid">
+            <label>
+              <span>Название</span>
+              <input name="title" value="Emergency fund" required>
+            </label>
+            <label>
+              <span>Цель</span>
+              <input name="target_amount" value="200000" type="number" min="1" step="1" required>
+            </label>
+            <label>
+              <span>Накоплено</span>
+              <input name="current_amount" value="25000" type="number" min="0" step="1" required>
+            </label>
+            <label>
+              <span>Дедлайн</span>
+              <input name="deadline" value="2026-12-31" type="date">
+            </label>
+            <button class="primary-button" type="submit">Создать цель</button>
+          </form>
+          <div class="list-stack" id="goalsList"></div>
+        </article>
+
+        <article class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Сигналы</p>
+            <h2>Уведомления</h2>
+          </div>
+          <form id="notificationForm" class="form-grid">
+            <label>
+              <span>Заголовок</span>
+              <input name="title" value="Budget warning" required>
+            </label>
+            <label>
+              <span>Сообщение</span>
+              <input name="message" value="Food budget is almost exceeded" required>
+            </label>
+            <button class="primary-button" type="submit">Создать уведомление</button>
+          </form>
+          <div class="list-stack" id="notificationsList"></div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
